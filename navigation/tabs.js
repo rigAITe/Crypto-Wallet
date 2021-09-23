@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 import { Home, Portfolio, Market, Profile } from '../screens'
 import { TabIcon } from '../components'
 import { COLORS, icons } from '../constants'
+import { setVisibility } from '../redux'
+import { connect } from 'react-redux'
+// import { executeVisibility } from '../redux'
 
 const Tab = createBottomTabNavigator()
 
@@ -23,7 +26,12 @@ const TabBarCustomerButton = ({ children, onPress }) => {
   )
 }
 
-const Tabs = () => {
+const Tabs = (props) => {
+
+  const co = () => {
+    props.setVisibility()
+  }
+
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -40,7 +48,18 @@ const Tabs = () => {
         component={Home}
         options={{
           tabBarIcon: ({ focused }) => {
-            return <TabIcon focused={focused} icon={icons.home} label='Home' />
+            if (!props.isVisible) {
+              return (
+                <TabIcon focused={focused} icon={icons.home} label='Home' />
+              )
+            }
+          },
+        }}
+        listeners={{
+          tabPress: (e) => {
+            if (props.isVisible) {
+              e.preventDefault()
+            }
           },
         }}
       />
@@ -49,13 +68,22 @@ const Tabs = () => {
         component={Portfolio}
         options={{
           tabBarIcon: ({ focused }) => {
-            return (
-              <TabIcon
-                focused={focused}
-                icon={icons.briefcase}
-                label='Portfolio'
-              />
-            )
+            if (!props.isVisible) {
+              return (
+                <TabIcon
+                  focused={focused}
+                  icon={icons.briefcase}
+                  label='Portfolio'
+                />
+              )
+            }
+          },
+        }}
+        listeners={{
+          tabPress: (e) => {
+            if (props.isVisible) {
+              e.preventDefault()
+            }
           },
         }}
       />
@@ -67,18 +95,15 @@ const Tabs = () => {
             return (
               <TabIcon
                 focused={focused}
-                icon={icons.trade}
+                icon={props.isVisible ? icons.close : icons.trade}
                 label='Trade'
                 isTrade={true}
               />
             )
           },
           tabBarButton: (props) => (
-            <TabBarCustomerButton
-              {...props}
-              onPress={() => console.log('TRADE')}
-            />
-          )
+            <TabBarCustomerButton {...props} onPress={co} />
+          ),
         }}
       />
       <Tab.Screen
@@ -86,9 +111,18 @@ const Tabs = () => {
         component={Market}
         options={{
           tabBarIcon: ({ focused }) => {
-            return (
-              <TabIcon focused={focused} icon={icons.market} label='Market' />
-            )
+            if (!props.isVisible) {
+              return (
+                <TabIcon focused={focused} icon={icons.market} label='Market' />
+              )
+            }
+          },
+        }}
+        listeners={{
+          tabPress: (e) => {
+            if (props.isVisible) {
+              e.preventDefault()
+            }
           },
         }}
       />
@@ -97,9 +131,22 @@ const Tabs = () => {
         component={Profile}
         options={{
           tabBarIcon: ({ focused }) => {
-            return (
-              <TabIcon focused={focused} icon={icons.profile} label='Profile' />
-            )
+            if (!props.isVisible) {
+              return (
+                <TabIcon
+                  focused={focused}
+                  icon={icons.profile}
+                  label='Profile'
+                />
+              )
+            }
+          },
+        }}
+        listeners={{
+          tabPress: (e) => {
+            if (props.isVisible) {
+              e.preventDefault()
+            }
           },
         }}
       />
@@ -107,4 +154,16 @@ const Tabs = () => {
   )
 }
 
-export default Tabs
+const matchStateToProps = (state) => {
+  return {
+    isVisible: state.isTradeModalVisible, 
+  }
+}
+
+const matchDispatchToProps = (dispatch) => {
+  return {
+    setVisibility: () => dispatch(setVisibility()),
+  }
+}
+
+export default connect(matchStateToProps, matchDispatchToProps)(Tabs)
