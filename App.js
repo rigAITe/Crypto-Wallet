@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import Tabs from './navigation/tabs'
 import { Provider } from 'react-redux'
-import { store } from './redux/index'
+import { store } from './redux/tab/index'
 const Stack = createStackNavigator()
 
 const App = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
 import { MainLayout } from '.'
-import { setVisibility } from '../redux/index'
+import { setVisibility } from '../redux/tab/index'
 import { connect } from 'react-redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 // import { executeVisibility } from '../redux/actionCreator'

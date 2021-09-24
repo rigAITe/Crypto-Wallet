@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Home, Portfolio, Market, Profile } from '../screens'
 import { TabIcon } from '../components'
 import { COLORS, icons } from '../constants'
-import { setVisibility } from '../redux'
+import { setVisibility } from '..//redux/tab/index'
 import { connect } from 'react-redux'
 // import { executeVisibility } from '../redux'
 
